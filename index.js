@@ -16,13 +16,17 @@ app.get("/", (req, res) => {
   res.send("✅ TREP backend is running.");
 });
 
-// ✅ Endpoint to fetch TREP/USD from GeckoTerminal (no API key)
+// ✅ Updated endpoint to fetch TREP/USD from GeckoTerminal using token address
 app.get("/price", async (req, res) => {
   try {
-    const response = await fetch("https://api.geckoterminal.com/api/v2/pools/A6FMyRFLuwN8xvFSNYqtsd2KPxht2B4LQ4L8LkP11NnM");
+    const response = await fetch(
+      "https://api.geckoterminal.com/api/v2/simple/networks/solana/token_price/Cf7r9JE9HcHSe1EN3hm6kEjGCyQuV3p6CjuwRx919Tka"
+    );
     const json = await response.json();
 
-    const price = parseFloat(json?.data?.attributes?.base_token_price_usd);
+    const price = parseFloat(
+      json.data?.attributes?.token_prices?.Cf7r9JE9HcHSe1EN3hm6kEjGCyQuV3p6CjuwRx919Tka
+    );
 
     if (!price) throw new Error("Price unavailable");
     res.json({ success: true, trepUsd: price });
